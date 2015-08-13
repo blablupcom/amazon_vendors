@@ -21,7 +21,9 @@ def scrape_asins(base_url, vendors):
             prices = requests.get('http://www.amazon.com/gp/aag/ajax/asinRenderToJson.html?id={0}&useMYI=0&numCellsInResultsSet=2400&isExplicitSearch=0&merchantID={1}&shovelerName=AAGProductWidget&maxCellsPerPage=1'.format(asin, vendor))
             li = json.loads(prices.text)
             sp = bs(li[0]['content'])
-            price = sp.find('li', 'AAG_ProductPrice aagItemDetLI').text
+            try:
+                price = sp.find('li', 'AAG_ProductPrice aagItemDetLI').text
+            except: pass
             todays_date = str(datetime.now())
             scraperwiki.sqlite.save(unique_keys=['Date'], data={"Seller ID": vendor, "ASIN": asin.strip(), "Price": price.strip(), "Date": todays_date})
             print asin
