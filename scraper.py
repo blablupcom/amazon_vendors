@@ -4,7 +4,8 @@ import requests
 import scraperwiki
 import itertools
 import json
-
+from random import randint
+from time import sleep
 
 def scrape_asins(base_url, vendors):
     for vendor in vendors:
@@ -18,6 +19,7 @@ def scrape_asins(base_url, vendors):
             else:
                 break
         for asin in asin_num:
+            sleep(randint(1,10))
             prices = requests.get('http://www.amazon.com/gp/aag/ajax/asinRenderToJson.html?id={0}&useMYI=0&numCellsInResultsSet=2400&isExplicitSearch=0&merchantID={1}&shovelerName=AAGProductWidget&maxCellsPerPage=1'.format(asin, vendor))
             li = json.loads(prices.text)
             sp = bs(li[0]['content'])
@@ -35,8 +37,7 @@ def scrape(vendors):
 
 
 if __name__ == '__main__':
-    #vendors = ['A1QPMQFTF8M71I', 'AR16HDX0T86D3', 'A2E18I18Q0JAFG', 'A2ZX3UCEGAR8GY',
-    #'A1PN9DPDDLPAD7', 'A1EOQ6DK5T5X45', 'A1E3Q3IXSLVMLQ', 'A21E5ULQPFWHNB', 'A2UQP4A626F3RZ',
-   # 'A7Y9B0BV6QPNF', 'A35PDZRZE9DDA3', 'AWLS96Q1FYGFY']
-    vendors = ['A1QPMQFTF8M71I', 'AR16HDX0T86D3'] 
+    vendors = ['A1QPMQFTF8M71I', 'AR16HDX0T86D3', 'A2E18I18Q0JAFG', 'A2ZX3UCEGAR8GY',
+    'A1PN9DPDDLPAD7', 'A1EOQ6DK5T5X45', 'A1E3Q3IXSLVMLQ', 'A21E5ULQPFWHNB', 'A2UQP4A626F3RZ',
+    'A7Y9B0BV6QPNF', 'A35PDZRZE9DDA3', 'AWLS96Q1FYGFY']
     scrape(vendors)
