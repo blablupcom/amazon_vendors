@@ -12,6 +12,7 @@ def scrape_asins(base_url, vendors):
         asin_num = []
         for page in itertools.count():
             data = {'seller':'{}'.format(vendor), 'currentPage': '{}'.format(page + 1), 'useMYI': '1'}
+            sleep(randint(1,10))
             pages = requests.post(base_url, data=data)
             soup = json.loads(pages.text)
             if soup:
