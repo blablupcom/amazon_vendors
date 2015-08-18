@@ -7,12 +7,12 @@ import json
 from random import randint
 from time import sleep
 
-def scrape_asins(base_url, vendors):
-    for vendor in vendors:
+
+def scrape_asins(base_url, vendor):
+    # for vendor in vendors:
         asin_num = []
         for page in itertools.count():
-            data = {'seller':'{}'.format(vendor), 'currentPage': '{}'.format(page + 1), 'useMYI': '1'}
-            sleep(randint(1,10))
+            data = {'seller': '{}'.format(vendor), 'currentPage': '{}'.format(page + 1), 'useMYI': '1'}
             pages = requests.post(base_url, data=data)
             soup = json.loads(pages.text)
             if soup:
@@ -20,7 +20,6 @@ def scrape_asins(base_url, vendors):
             else:
                 break
         for asin in asin_num:
-            sleep(randint(1,10))
             prices = requests.get('http://www.amazon.com/gp/aag/ajax/asinRenderToJson.html?id={0}&useMYI=0&numCellsInResultsSet=2400&isExplicitSearch=0&merchantID={1}&shovelerName=AAGProductWidget&maxCellsPerPage=1'.format(asin, vendor))
             li = json.loads(prices.text)
             sp = bs(li[0]['content'])
@@ -32,13 +31,14 @@ def scrape_asins(base_url, vendors):
             print asin
 
 
-def scrape(vendors):
+def scrape(vendor):
     base_url = 'http://www.amazon.com/gp/aag/ajax/searchResultsJson.html'
-    scrape_asins(base_url, vendors)
+    scrape_asins(base_url, vendor)
 
 
 if __name__ == '__main__':
     vendors = ['A1QPMQFTF8M71I', 'AR16HDX0T86D3', 'A2E18I18Q0JAFG', 'A2ZX3UCEGAR8GY',
     'A1PN9DPDDLPAD7', 'A1EOQ6DK5T5X45', 'A1E3Q3IXSLVMLQ', 'A21E5ULQPFWHNB', 'A2UQP4A626F3RZ',
     'A7Y9B0BV6QPNF', 'A35PDZRZE9DDA3', 'AWLS96Q1FYGFY']
-    scrape(vendors)
+    for vendor in vendors:
+        scrape(vendor)
